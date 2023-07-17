@@ -56,6 +56,6 @@ def custom_action(alert: PrometheusKubernetesAlert):
         logging.info(f"[custom_action] upscaling {alert_subject.subject_type.value} - {alert_subject.name}")
 
         batch_v1 = client.BatchV1Api()
-        job = create_job_object(alert_subject.name, 100)
+        job = create_job_object(alert_subject.name, "100")
         create_job(batch_v1, job)
     except Exception as e: print(e)
