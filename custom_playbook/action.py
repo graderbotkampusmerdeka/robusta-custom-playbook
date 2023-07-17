@@ -44,10 +44,15 @@ def create_job(api_instance, job):
 @action
 def custom_action(alert: PrometheusKubernetesAlert):
     try:
+        config.load_kube_config()
+    except:
+        config.load_incluster_config()
+
+
+    try:
         alert_subject = alert.get_alert_subject()
         logging.info(f"[custom_action] upscaling {alert_subject.subject_type.value} - {alert_subject.name}")
 
-        config.load_kube_config()
         batch_v1 = client.BatchV1Api()
         job = create_job_object(alert_subject.name, 100)
         create_job(batch_v1, job)
