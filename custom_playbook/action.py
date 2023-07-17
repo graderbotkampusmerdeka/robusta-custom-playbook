@@ -2,8 +2,11 @@ from robusta.api import *
 import logging
 
 @action
-def custom_action(event: PrometheusKubernetesAlert):
+def custom_action(alert: PrometheusKubernetesAlert):
     # we have full access to the pod on which the alert fired
-    pod = event.get_pod()
-    pod_name = pod.metadata.name
-    logging.info(f"[custom_action] executing custom_action for {pod_name}")
+    labels = alert.alert.labels
+    if 'deployment' in labels:
+        logging.info(f"[custom_action] executing custom_action for {labels['deployment']}")
+    else:
+        logging.info(f"[custom_action] executing custom_action for {labels}")
+
