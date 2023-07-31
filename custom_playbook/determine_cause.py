@@ -41,7 +41,7 @@ def determine_cause(alert: PrometheusKubernetesAlert):
             return
 
         if need_more_cpu(namespace, resource_name):
-            logging.info(f"{resource_name} is crashing cause of the lack of cpu, should increase memory")
+            logging.info(f"{resource_name} is crashing cause of the lack of cpu, should increase cpu")
             return
 
         logging.info(f"cannot automatically repair {resource_name}")
