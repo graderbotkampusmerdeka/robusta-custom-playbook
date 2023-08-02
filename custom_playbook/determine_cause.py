@@ -35,16 +35,18 @@ def need_more_resource(namespace, deployment_name):
     start_time = end_time - (1 * 30 * 60) # 30 minutes # TODO: Don't hardcode duration
     client = VictoriaMetrics(start_time, end_time)
     depl = Deployment(VictoriaMetrics.cluster_staging, namespace, deployment_name) # TODO: Don't hardcode cluster
+    
+    try:
+        mem_util = client.get_deployment_memory_utilization_per_container(depl)
+        cpu_util = client.get_deployment_cpu_utilization_per_container(depl)
 
-    mem_util = client.get_deployment_memory_utilization_per_container(depl)
-    cpu_util = client.get_deployment_cpu_utilization_per_container(depl)
+        max_cpu_util = get_max(cpu_util)
+        max_memory_util = get_max(mem_util)
 
-    max_cpu_util = get_max(cpu_util)
-    max_memory_util = get_max(mem_util)
-
-    if max_cpu_util > CPU_UTIL_THRESHOLD or max_memory_util > MEMORY_UTIL_THRESHOLD:
-        return True
-
+        if max_cpu_util > CPU_UTIL_THRESHOLD or max_memory_util > MEMORY_UTIL_THRESHOLD:
+            return True
+    except Exception as e:
+        print(f"failed getting cpu / mem util: {e}")
     return False
 
 @action
