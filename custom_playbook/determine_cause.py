@@ -1,7 +1,7 @@
 from robusta.api import *
 from kubernetes import client as kubeclient, config
 from datetime import datetime, timedelta
-from client.victoriametrics import VictoriaMetrics, Deployment
+from custom_playbook.client.victoriametrics import VictoriaMetrics, Deployment
 
 import logging
 import time
